@@ -2,23 +2,5 @@ S A
 a b c
 S
 S -> a A
-A -> b A
+A B -> b A
 A -> c
-
-
-fn main() {
-    let n: i32;
-    let i: i32;
-    let max: i32;
-
-    read(n);
-    max = 0;
-    for (i in 0..n) {
-        let x: i32;
-        read(x);
-
-        if (x > max) {
-            max = x;
-        }
-    }
-

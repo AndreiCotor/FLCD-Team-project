@@ -1,7 +1,7 @@
 ArrStatement AssignStatement BeginningOfIdentifier Condition Digit Expression ForStatement FunctionCallStatement FunctionName Identifier IfStatement IntConstant IntExpression Letter MathematicalOperator MaybeSign NonZeroDigit PositiveNumber Program ProgramBlock RelationalOperator RestOfIdentifier Statement StringConstant StringExpression TheInteriorOfStringConstant TheRestOfIntConstant VarStatement WhileStatement
 " ( ) * + , - / 0 1 2 3 4 5 6 7 8 9 ; : .. < <= = == > >= A B C D E F G H I J K L M N O P Q R S T U V W X Y Z _ a b c d e else epsilon f fn for g h i in i32 if j k l let m main n o p print q r read s str t u until v vec w x y z { }
 Program
-Program -> fn main () { ProgramBlock }
+Program -> fn main ( ) { ProgramBlock }
 ProgramBlock -> Statement ; ProgramBlock
 ProgramBlock -> epsilon
 Statement -> VarStatement
@@ -122,7 +122,7 @@ IntConstant -> MaybeSign PositiveNumber
 IntConstant -> 0
 PositiveNumber -> NonZeroDigit TheRestOfIntConstant
 TheRestOfIntConstant -> epsilon
-TheRestOfIntConstant -> digit TheRestOfIntConstant
+TheRestOfIntConstant -> Digit TheRestOfIntConstant
 StringConstant -> " TheInteriorOfStringConstant "
 TheInteriorOfStringConstant -> epsilon
 TheInteriorOfStringConstant -> Letter TheInteriorOfStringConstant

@@ -17,6 +17,7 @@ def menu():
         print("2. Check Context free grammar")
         print("3. Enrich grammar")
         print("4. Print grammar")
+        print("5. Print productions for non-terminal")
 
         opt = input("Option: ")
         if opt == "1":
@@ -31,6 +32,9 @@ def menu():
             print("Terminals: ", grammar.terminals)
             print("Starting symbol: ", grammar.starting_symbol)
             print("Productions: ", grammar.production_set)
+        if opt == "5":
+            non_term = input("Non-Terminal: ")
+            print(grammar.get_productions_for_non_terminal((non_term, )))
 
 
 if __name__ == '__main__':

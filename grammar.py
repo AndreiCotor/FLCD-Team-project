@@ -31,6 +31,10 @@ class Grammar:
                 splited_list = lines[i].strip().split("->")
                 lhs = tuple(splited_list[0].strip().split(" "))
                 rhs = splited_list[1].strip().split(" ")
+                for el in rhs:
+                    if el not in self.non_terminals and el not in self.terminals:
+                        raise Exception("Grammar contains illegal elements " + el)
+
                 self.production_set.add_production(lhs, rhs)
 
         self.is_enriched = False
@@ -38,7 +42,7 @@ class Grammar:
     def check_cfg(self):
         ok = True
         for production in self.production_set.get_all_productions().keys():
-            if len(production) > 1 and production[0] not in self.non_terminals:
+            if len(production) > 1 or production[0] not in self.non_terminals:
                 ok = False
 
         return ok
@@ -55,6 +59,10 @@ class Grammar:
         enriched_grammar.production_set.add_production((self.ENRICHED_GRAMMAR_STARTING_SYMBOL, ), [self.starting_symbol])
 
         return enriched_grammar
+
+    def get_productions_for_non_terminal(self, non_term):
+        return self.production_set.get_production_for_non_terminal(non_term)
+
 
 # {('S',): ['a', 'A'], ('A',): ['b', 'A', 'c']}
 #{('S',): [['a', 'A']], ('A',): [['b', 'A'], ['c']]}
