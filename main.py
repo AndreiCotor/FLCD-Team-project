@@ -1,6 +1,6 @@
 from grammar import Grammar
 from production_set import ProductionSet
-
+from lr import canonical_collection
 
 def gramar_function_test():
     # Test grammar
@@ -34,8 +34,14 @@ def menu():
             print("Productions: ", grammar.production_set)
         if opt == "5":
             non_term = input("Non-Terminal: ")
-            print(grammar.get_productions_for_non_terminal((non_term, )))
+            print(grammar.get_productions_for_non_terminal(non_term))
+
+
+def print_canonical_collection():
+    grammar = Grammar()
+    grammar.read('g1.in')
+    print(canonical_collection(grammar))
 
 
 if __name__ == '__main__':
-    menu()
+    print_canonical_collection()
