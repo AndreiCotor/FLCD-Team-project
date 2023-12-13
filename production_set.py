@@ -35,7 +35,7 @@ class ProductionSet:
         return production_list
 
     def get_production_for_non_terminal(self, non_terminal):
-        return self.productions[non_terminal]
+        return self.productions[(non_terminal, )]
 
 
 # S -> AB
