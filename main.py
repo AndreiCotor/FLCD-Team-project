@@ -1,8 +1,11 @@
+import lr
 from grammar import Grammar
+from pif import read_pif
 from production_set import ProductionSet
 from lr import canonical_collection
 
-def gramar_function_test():
+
+def grammar_function_test():
     # Test grammar
     prod = ProductionSet({})
     prod.add_production(('A', 'AB'), ['BC', 'DE'])
@@ -43,5 +46,14 @@ def print_canonical_collection():
     print(canonical_collection(grammar))
 
 
+def parsing():
+    grammar = Grammar()
+    grammar.read('g1.in')
+    grammar_enr = grammar.get_enriched_grammar()
+    parser_output = lr.parse(["a", "b", "b", "c", "d"], grammar_enr)
+    parser_output.print_to_console()
+
+
 if __name__ == '__main__':
-    print_canonical_collection()
+    read_pif()
+    parsing()

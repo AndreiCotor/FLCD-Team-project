@@ -1,6 +1,10 @@
 from canonical_collection import CanonicalCollection
 from item import Item
-from state import State
+from parser_output import ParserOutput
+from parsing_tree_row import ParsingTreeRow
+from row import Row
+from state import State, StateType
+from table import Table
 
 
 def get_non_terminal_after_dot(item, grammar):
@@ -77,3 +81,80 @@ def canonical_collection(grammar):
 
     return canonical_collection_obj
 
+
+def get_parsing_table(grammar):
+    canonical_coll = canonical_collection(grammar)
+    table = Table({})
+
+    for key, value in canonical_coll.adjacency_list.items():
+        state = canonical_coll.states[key[0]]
+        if key[0] not in table.table_rows:
+            table.table_rows[key[0]] = Row(state.state_type, {}, None)
+        table.table_rows[key[0]].goto[key[1]] = value
+
+    ordered_productions = grammar.production_set.get_ordered_productions()
+    for index, state in enumerate(canonical_coll.states):
+        if state.state_type == StateType.REDUCE:
+            item = next(iter(state.items))
+            reduction_index = ordered_productions.index((item.lhs, item.rhs))
+            table.table_rows[index] = Row(state.state_type, None, reduction_index)
+        if state.state_type == StateType.ACCEPT:
+            table.table_rows[index] = Row(state.state_type, None, None)
+
+    return table
+
+
+def parse(list_of_strings, grammar):
+    working_stack = [("$", 0)]
+    remaining_stack = list_of_strings.copy()
+    parsing_table = get_parsing_table(grammar)
+
+    parsing_tree = ParserOutput()
+    tree_stack = []
+    current_index = 0
+
+    ordered_productions = grammar.production_set.get_ordered_productions()
+    while remaining_stack or working_stack:
+        table_row = parsing_table.table_rows.get(working_stack[-1][1])
+        if table_row is None:
+            raise Exception(f"Invalid state {working_stack[-1][1]} in the working stack")
+
+        if table_row.action == StateType.SHIFT:
+            if not remaining_stack:
+                raise Exception("Action is shift but nothing else is left in the remaining stack")
+            token = remaining_stack[0]
+            value = table_row.goto.get(token)
+            if value is None:
+                raise Exception(f"Invalid symbol \"{token}\" for goto of state {working_stack[-1][1]}")
+
+            working_stack.append((token, value))
+            remaining_stack.pop(0)
+            tree_stack.append((token, current_index))
+            current_index += 1
+
+        elif table_row.action == StateType.ACCEPT:
+            last_element = tree_stack.pop()
+            parsing_tree.add(ParsingTreeRow(last_element[1], last_element[0], -1, -1))
+            return parsing_tree
+
+        elif table_row.action == StateType.REDUCE:
+            production_to_reduce_to = ordered_productions[table_row.reduction_index]
+            parent_index = current_index
+            current_index += 1
+            last_index = -1
+
+            for _ in range(len(production_to_reduce_to[1])):
+                working_stack.pop()
+                last_element = tree_stack.pop()
+                parsing_tree.add(ParsingTreeRow(last_element[1], last_element[0], parent_index, last_index))
+                last_index = last_element[1]
+
+            tree_stack.append((production_to_reduce_to[0], parent_index))
+            previous = working_stack[-1]
+            next_state = parsing_table.table_rows[previous[1]].goto[production_to_reduce_to[0]]
+            working_stack.append((production_to_reduce_to[0], next_state))
+
+        else:
+            raise Exception(str(table_row.action))
+
+    raise Exception("No ACCEPT found before stacks got empty")
