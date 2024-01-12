@@ -1,15 +1,16 @@
-ArrStatement AssignStatement BeginningOfIdentifier Condition Digit Expression ForStatement FunctionCallStatement FunctionName Identifier IfStatement IntConstant IntExpression Letter MathematicalOperator MaybeSign NonZeroDigit PositiveNumber Program ProgramBlock RelationalOperator RestOfIdentifier Statement StringConstant StringExpression TheInteriorOfStringConstant TheRestOfIntConstant VarStatement WhileStatement
-" ( ) * + , - / 0 1 2 3 4 5 6 7 8 9 ; : .. < <= = == > >= A B C D E F G H I J K L M N O P Q R S T U V W X Y Z _ a b c d e else epsilon f fn for g h i in i32 if j k l let m main n o p print q r read s str t u until v vec w x y z { }
+ArrStatement AssignStatement Condition Expression ForStatement FunctionCallStatement FunctionName IfStatement IntExpression MathematicalOperator NonZeroDigit Program ProgramBlock RelationalOperator Statement StringExpression VarStatement WhileStatement
+" ( ) * + , - / ; : .. < <= = == > >= else epsilon fn for in i32 if let main print read str until vec { } Identifier StringConstant IntConstant
 Program
-Program -> fn main ( ) { ProgramBlock }
-ProgramBlock -> Statement ; ProgramBlock
-ProgramBlock -> epsilon
-Statement -> VarStatement
-Statement -> ArrStatement
-Statement -> AssignStatement
+Program -> fn main ( ) { ProgramBlock
+ProgramBlock -> Statement ProgramBlock
+ProgramBlock -> }
+Statement -> VarStatement ;
+Statement -> ArrStatement ;
+Statement -> AssignStatement ;
 Statement -> IfStatement
 Statement -> WhileStatement
-Statement -> FunctionCallStatement
+Statement -> FunctionCallStatement ;
+Statement -> ForStatement
 VarStatement -> let Identifier : i32
 Expression -> IntExpression
 Expression -> StringExpression
@@ -17,114 +18,22 @@ MathematicalOperator -> +
 MathematicalOperator -> -
 MathematicalOperator -> *
 MathematicalOperator -> /
-IntExpression -> IntConstant
-IntExpression -> Identifier
-IntExpression -> IntExpression MathematicalOperator IntExpression
-IntExpression -> ( IntExpression MathematicalOperator IntExpression )
+IntExpression -> Identifier MathematicalOperator IntConstant
 StringExpression -> StringConstant
-StringExpression -> Identifier
 ArrStatement -> let Identifier : vec
-AssignStatement -> Identifier = Expression
-IfStatement -> if ( Condition ) { ProgramBlock }
-IfStatement -> if ( Condition ) { ProgramBlock } else { ProgramBlock }
+AssignStatement -> Identifier = IntConstant
+AssignStatement -> Identifier = Identifier
+IfStatement -> if ( Condition ) { ProgramBlock
 RelationalOperator -> ==
 RelationalOperator -> <
 RelationalOperator -> <=
 RelationalOperator -> >
 RelationalOperator -> >=
 Condition -> Expression RelationalOperator Expression
-WhileStatement -> until ( Condition ) { ProgramBlock }
-ForStatement -> for ( Identifier in IntExpression .. IntExpression ) { ProgramBlock }
+Condition -> Identifier RelationalOperator Identifier
+WhileStatement -> until ( Condition ) { ProgramBlock
+ForStatement -> for ( Identifier in IntConstant .. Identifier ) { ProgramBlock
 FunctionCallStatement -> FunctionName ( Expression )
+FunctionCallStatement -> FunctionName ( Identifier )
 FunctionName -> print
 FunctionName -> read
-Letter -> A
-Letter -> B
-Letter -> C
-Letter -> D
-Letter -> E
-Letter -> F
-Letter -> G
-Letter -> H
-Letter -> I
-Letter -> J
-Letter -> K
-Letter -> L
-Letter -> M
-Letter -> N
-Letter -> O
-Letter -> P
-Letter -> Q
-Letter -> R
-Letter -> S
-Letter -> T
-Letter -> U
-Letter -> V
-Letter -> W
-Letter -> X
-Letter -> Y
-Letter -> Z
-Letter -> a
-Letter -> b
-Letter -> c
-Letter -> d
-Letter -> e
-Letter -> f
-Letter -> g
-Letter -> h
-Letter -> i
-Letter -> j
-Letter -> k
-Letter -> l
-Letter -> m
-Letter -> n
-Letter -> o
-Letter -> p
-Letter -> q
-Letter -> r
-Letter -> s
-Letter -> t
-Letter -> u
-Letter -> v
-Letter -> w
-Letter -> x
-Letter -> y
-Letter -> z
-Digit -> 0
-Digit -> 1
-Digit -> 2
-Digit -> 3
-Digit -> 4
-Digit -> 5
-Digit -> 6
-Digit -> 7
-Digit -> 8
-Digit -> 9
-NonZeroDigit -> 1
-NonZeroDigit -> 2
-NonZeroDigit -> 3
-NonZeroDigit -> 4
-NonZeroDigit -> 5
-NonZeroDigit -> 6
-NonZeroDigit -> 7
-NonZeroDigit -> 8
-NonZeroDigit -> 9
-BeginningOfIdentifier -> Letter
-BeginningOfIdentifier -> _
-Identifier -> BeginningOfIdentifier RestOfIdentifier
-RestOfIdentifier -> epsilon
-RestOfIdentifier -> Letter RestOfIdentifier
-RestOfIdentifier -> _ RestOfIdentifier
-MaybeSign -> +
-MaybeSign -> -
-MaybeSign -> epsilon
-IntConstant -> MaybeSign PositiveNumber
-IntConstant -> 0
-PositiveNumber -> NonZeroDigit TheRestOfIntConstant
-TheRestOfIntConstant -> epsilon
-TheRestOfIntConstant -> Digit TheRestOfIntConstant
-StringConstant -> " TheInteriorOfStringConstant "
-TheInteriorOfStringConstant -> epsilon
-TheInteriorOfStringConstant -> Letter TheInteriorOfStringConstant
-TheInteriorOfStringConstant -> Digit TheInteriorOfStringConstant
-TheInteriorOfStringConstant -> _ TheInteriorOfStringConstant

@@ -1,8 +1,11 @@
+import lr
 from grammar import Grammar
+from pif import read_pif
 from production_set import ProductionSet
 from lr import canonical_collection
 
-def gramar_function_test():
+
+def grammar_function_test():
     # Test grammar
     prod = ProductionSet({})
     prod.add_production(('A', 'AB'), ['BC', 'DE'])
@@ -39,9 +42,29 @@ def menu():
 
 def print_canonical_collection():
     grammar = Grammar()
+    grammar.read('g2.in')
+    grammar_enr = grammar.get_enriched_grammar()
+    print(canonical_collection(grammar_enr))
+
+
+def parse_g1():
+    grammar = Grammar()
     grammar.read('g1.in')
-    print(canonical_collection(grammar))
+    grammar_enr = grammar.get_enriched_grammar()
+    parser_output = lr.parse(["a", "b", "b", "c", "d"], grammar_enr)
+    parser_output.print_to_file("out1.txt")
+
+
+def parse_g2():
+    grammar = Grammar()
+    grammar.read("g2.in")
+    grammar_enr = grammar.get_enriched_grammar()
+    tokens = read_pif()
+    parser_output = lr.parse(tokens, grammar_enr)
+    parser_output.print_to_file("out2.txt")
 
 
 if __name__ == '__main__':
-    print_canonical_collection()
+    #print_canonical_collection()
+    parse_g1()
+    parse_g2()
