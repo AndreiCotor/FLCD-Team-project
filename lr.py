@@ -84,6 +84,11 @@ def canonical_collection(grammar):
 
 def get_parsing_table(grammar):
     canonical_coll = canonical_collection(grammar)
+
+    for st in canonical_coll.states:
+        if st.state_type == StateType.SHIFT_REDUCE_CONFLICT:
+            print(st)
+
     table = Table({})
 
     for key, value in canonical_coll.adjacency_list.items():

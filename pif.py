@@ -1,27 +1,12 @@
 def read_pif():
-    symbol_table = {
-        "INT": [],
-        "STRING": [],
-        "ID": []
-    }
+
+    with open("token.in", "r") as file:
+        tokens = file.readlines()
 
     with open("pif.out", "r") as file:
         lines = file.readlines()
 
     idx = lines.index("Symbol table:\n")
-    st_lines = lines[idx+2:]
-
-    section = "ID"
-    for line in st_lines:
-        if line.strip() == "INT:":
-            section = "INT"
-            continue
-        if line.strip() == "STRING:":
-            section = "STRING"
-            continue
-
-        line_list = eval(line)
-        symbol_table[section].append(line_list)
 
     pif_lines = lines[1:idx]
     pif_data = []
@@ -31,9 +16,14 @@ def read_pif():
             index, value = eval(line)
 
             if index != -1:
-                token = tokens[index]
+                token = tokens[index].strip()
                 pif_data.append(token)
             else:
-                if value[0] == ""
+                if value[0] == "ID":
+                    pif_data.append("Identifier")
+                elif value[0] == "INT":
+                    pif_data.append("IntConstant")
+                else:
+                    pif_data.append("StringConstant")
 
     return pif_data

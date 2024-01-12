@@ -1,15 +1,16 @@
 ArrStatement AssignStatement Condition Expression ForStatement FunctionCallStatement FunctionName IfStatement IntExpression MathematicalOperator NonZeroDigit Program ProgramBlock RelationalOperator Statement StringExpression VarStatement WhileStatement
 " ( ) * + , - / ; : .. < <= = == > >= else epsilon fn for in i32 if let main print read str until vec { } Identifier StringConstant IntConstant
 Program
-Program -> fn main ( ) { ProgramBlock }
-ProgramBlock -> Statement ; ProgramBlock
-ProgramBlock -> epsilon
-Statement -> VarStatement
-Statement -> ArrStatement
-Statement -> AssignStatement
+Program -> fn main ( ) { ProgramBlock
+ProgramBlock -> Statement ProgramBlock
+ProgramBlock -> }
+Statement -> VarStatement ;
+Statement -> ArrStatement ;
+Statement -> AssignStatement ;
 Statement -> IfStatement
 Statement -> WhileStatement
-Statement -> FunctionCallStatement
+Statement -> FunctionCallStatement ;
+Statement -> ForStatement
 VarStatement -> let Identifier : i32
 Expression -> IntExpression
 Expression -> StringExpression
@@ -17,24 +18,22 @@ MathematicalOperator -> +
 MathematicalOperator -> -
 MathematicalOperator -> *
 MathematicalOperator -> /
-IntExpression -> IntConstant
-IntExpression -> Identifier
-IntExpression -> IntExpression MathematicalOperator IntExpression
-IntExpression -> ( IntExpression MathematicalOperator IntExpression )
+IntExpression -> Identifier MathematicalOperator IntConstant
 StringExpression -> StringConstant
-StringExpression -> Identifier
 ArrStatement -> let Identifier : vec
-AssignStatement -> Identifier = Expression
-IfStatement -> if ( Condition ) { ProgramBlock }
-IfStatement -> if ( Condition ) { ProgramBlock } else { ProgramBlock }
+AssignStatement -> Identifier = IntConstant
+AssignStatement -> Identifier = Identifier
+IfStatement -> if ( Condition ) { ProgramBlock
 RelationalOperator -> ==
 RelationalOperator -> <
 RelationalOperator -> <=
 RelationalOperator -> >
 RelationalOperator -> >=
 Condition -> Expression RelationalOperator Expression
-WhileStatement -> until ( Condition ) { ProgramBlock }
-ForStatement -> for ( Identifier in IntExpression .. IntExpression ) { ProgramBlock }
+Condition -> Identifier RelationalOperator Identifier
+WhileStatement -> until ( Condition ) { ProgramBlock
+ForStatement -> for ( Identifier in IntConstant .. Identifier ) { ProgramBlock
 FunctionCallStatement -> FunctionName ( Expression )
+FunctionCallStatement -> FunctionName ( Identifier )
 FunctionName -> print
 FunctionName -> read
